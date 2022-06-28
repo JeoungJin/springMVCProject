@@ -1,0 +1,86 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+  PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+  "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+  
+  
+<mapper namespace="net.gasan.emp">
+	<select id="selectAll" resultType="com.kosta.dto.EmpVO">
+		select * from employees order by 1
+	</select>
+	<select id="selectByDept" resultType="com.kosta.dto.EmpVO" parameterType="int">
+		select * from employees where department_id = #{aa} order by 1
+	</select>
+ 
+	<select id="selectByManager2" resultType="com.kosta.dto.EmpVO" 
+	                    parameterType="int">
+		select * from employees where manager_id = #{managerId} order by 1
+	</select>
+	
+	<select id="selectByJob" resultType="com.kosta.dto.EmpVO" parameterType="string">
+		select * from employees where job_id = #{job} order by 1
+	</select>
+	
+	<select id="selectJobAll" resultType="com.kosta.dto.JobVO" >
+		select * from jobs order by 1
+	</select>
+	
+	
+	<select id="selectByCondition" resultType="com.kosta.dto.EmpVO" 
+	                 parameterType="map">
+		select * from employees  
+		where salary >= #{salary}
+		<if test="deptid!=0">
+		  and department_id = #{deptid}
+		</if>
+		<if test="jobid!=null">
+		  and job_id = #{jobid}
+		</if>
+		<if test="hiredate!=null">
+		  and hire_date >= #{hiredate}
+		</if>
+	</select>
+	<select id="selectById" parameterType="int" resultType="com.kosta.dto.EmpVO">
+	   select * from employees where employee_id = #{empid}
+	
+	</select>
+	<insert id="insert" parameterType="com.kosta.dto.EmpVO">
+	     insert into employees (employee_id, first_name, last_name, job_id,
+	     email,manager_id, department_id, phone_number, salary, 
+	     commission_pct, hire_date) 
+	     values(#{employee_id},#{first_name},#{last_name},#{job_id},
+	     #{email},#{manager_id},#{department_id},#{phone_number},
+	     #{salary},#{commission_pct},#{hire_date})
+	</insert>
+	<update id="update" parameterType="com.kosta.dto.EmpVO">
+	  update employees
+	  set first_name = #{first_name},
+	      last_name = #{last_name},
+	      job_id = #{job_id},
+	      email = #{email},
+	      manager_id = #{manager_id},
+	      department_id = #{department_id},
+	      phone_number = #{phone_number},
+	      salary = #{salary},
+	      commission_pct = #{commission_pct},
+	      hire_date = #{hire_date}	      
+	  where employee_id = #{employee_id}
+	</update>
+	<delete id="delete" parameterType="int">
+	     DELETE FROM EMPLOYEES WHERE EMPLOYEE_ID  = #{empid}
+	</delete>
+	<delete id="deleteByDept" parameterType="int">
+	     DELETE FROM EMPLOYEES WHERE department_id  = #{did}
+	</delete>
+	
+	<select id="selectbyManager"   resultType="com.kosta.dto.EmpVO">
+	     select *  from employees  
+		  where employee_id in (select distinct manager_id from employees) 
+	</select>
+	<select id="selectByEmailDup" resultType="int" parameterType="string">
+	    select count(*) from employees where email=#{email}
+	</select>
+</mapper>
+
+
+
